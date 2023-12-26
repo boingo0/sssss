@@ -1,0 +1,353 @@
+# -*- coding: utf-8 -*-
+from telebot import *
+from time import sleep
+import pickle
+CONTENT_TYPES = ["text", "audio", "document", "photo", "sticker", "video", "video_note", "voice", "location", "contact",
+                 "new_chat_members", "left_chat_member", "new_chat_title", "new_chat_photo", "delete_chat_photo",
+                 "group_chat_created", "supergroup_chat_created", "channel_chat_created", "migrate_to_chat_id",
+                 "migrate_from_chat_id", "pinned_message"]
+bot = telebot.TeleBot('6460856766:AAFTJ37o0UXLxMNpiJmIeADGglxjPGRKTSQ')
+def add_Inlin(text: Any,url = None,callback_data = None,web_app = None,switch_inline_query = None,switch_inline_query_current_chat = None,callback_game = None,pay = None,login_url = None,):
+    return (types.InlineKeyboardButton(text, url, callback_data, web_app, switch_inline_query, switch_inline_query_current_chat, callback_game, pay, login_url))
+def Inlin_Markup():
+    return types.InlineKeyboardMarkup()
+def FileDump(way, mode, data):
+    myFile = open(way, mode)
+    pickle.dump(data, myFile)
+    myFile.close()
+def FileLoad(way, mode):
+    myFile = open(way, mode)
+    data = pickle.load(myFile)
+    myFile.close()
+    return data
+def Highlighting_int(info):
+    g = str(info).split()
+    h = []
+    for o in g:
+        r = list(o)
+        for f in r:
+            try:
+                e = int(f)
+                h.append(str(e))
+            except:
+                pass
+    y = ''.join(h)
+    return y
+def add_kanal(text):
+    f = open("Данные\Каналы\Каналы.txt", 'a')
+    data = text + "\n"
+    f.write(data)
+    f.close()
+keyboard = types.ReplyKeyboardMarkup(row_width=1,
+                                         resize_keyboard=True)  # подключаем клавиатуру через дополнение types
+button_phone = types.KeyboardButton(text="Поделится своим контактом", request_contact=True)  # указываем название кнопки
+keyboard.add(button_phone)  # добавляем кнопку
+q = ''
+def admin_menu(message):
+    q = Inlin_Markup()
+    q.add(add_Inlin('Пополнить счёт за другого', '', 'Пополнить счёт за другова'))
+    q.add(add_Inlin('Написать пост пользователям бота', '', 'Написать пост пользователям бота'))
+    q.add(add_Inlin('Добавить канал', '', 'Добавить канал'))
+    q.add(add_Inlin('data', '', 'data'))
+    q.add(add_Inlin('Меню', '', 'Меню'))
+    datas = FileLoad("Данные\Пользователи\Пользователи", 'rb')
+    photo = open('Данные\Фото\Шестерня3.jpg', 'rb')
+    if datas[str(message.from_user.id)]['platform'] == 'Мобильная':
+
+        bot.send_photo(message.from_user.id, photo,
+                       caption='🛑                    ⚙Админ меню⚙                    🛑',
+                       reply_markup=q)
+        photo.close()
+    elif datas[str(message.from_user.id)]['platform'] == 'Компьютерная':
+
+        bot.send_photo(message.from_user.id, photo,
+                       caption='🛑                                              ⚙Админ меню⚙                                            🛑',
+                       reply_markup=q)
+        photo.close()
+    else:
+
+        bot.send_photo(message.from_user.id, photo,
+                       caption='⚙Меню⚙',
+                       reply_markup=q)
+        photo.close()
+def menu(message):
+    q = Inlin_Markup()
+    #str(message.from_user.id) == "378752653" or
+    if True:
+    #if str(message.from_user.id) == "378752653" or str(message.from_user.id) == '5311448115':
+        #q.add(add_Inlin('Написать пост пользователям бота', '', 'Написать пост пользователям бота'))
+        if str(message.from_user.id) == '5311448115':
+            q.add(add_Inlin('Админ меню','','Админ'))
+    q.add(add_Inlin('Пополнить счёт', '', 'Пополнить счёт'),
+          add_Inlin('Написать пост', '', 'Написать пост'))
+    #q.add(add_Inlin('Связаться с администратором', '', 'Связаться с администратором'))
+    datas = FileLoad("Данные\Пользователи\Пользователи", 'rb')
+    photo = open('Данные\Фото\Шестерня2.jpg', 'rb')
+    if datas[str(message.from_user.id)]['platform'] == 'Мобильная':
+
+        bot.send_photo(message.from_user.id, photo,
+                       caption='🛠                       ⚙Меню⚙                       🛠',
+                       reply_markup=q)
+        photo.close()
+    elif datas[str(message.from_user.id)]['platform'] == 'Компьютерная':
+
+        bot.send_photo(message.from_user.id, photo,
+                       caption='🛠                                                 ⚙Меню⚙                                               🛠',
+                       reply_markup=q)
+        photo.close()
+    else:
+
+        bot.send_photo(message.from_user.id, photo,
+                       caption='⚙Меню⚙',
+                       reply_markup=q)
+        photo.close()
+
+info_chat = ''
+id_user = ''
+w = Inlin_Markup()
+w.add(add_Inlin('Меню','','Меню'))
+@bot.message_handler(commands=['start'])
+def start_message(message):
+    q = Inlin_Markup()
+    q.add(add_Inlin('У меня мобильная версия+', '', 'У меня мобильная версия'))
+    q.add(add_Inlin('У меня компьютерная версия+', '', 'У меня компьютерная версия'))
+    datas = FileLoad("Данные\Пользователи\Пользователи", 'rb')
+    if not str(message.from_user.id) in datas:
+        bot.send_message(message.chat.id,
+                         "Здраствуйте, этот бот был сделан для удобных публикаций в партнёрских каналах, для пополнения счета обращайтесь к @Semen904")
+        sleep(0.75)
+        bot.send_message(message.from_user.id,
+                         #, для регистрации нажмите на кнопку "Поделится своим контактом"
+                         'вы не зарегистрированы, для регистрации ответьте вопрос')
+        sleep(0.75)
+        bot.send_message(message.from_user.id,
+                         # , для регистрации нажмите на кнопку "Поделится своим контактом"
+                         'У вас какая платформа для телеграмма', reply_markup=q)
+    else:
+        menu(message)
+@bot.callback_query_handler(func=lambda call: True)
+def callback_inline(call):
+    global user_text_money
+    global info_chat
+    global id_user
+    global platform
+    f = open("Данные\Каналы\Каналы.txt", 'r')
+    data = list(f)
+    f.close()
+    end = []
+    for ds in data:
+        d = list(ds)
+        z = 0
+        while not z == 12:
+            z += 1
+            d.pop(0)
+        d[0] = "@"
+        d.pop(-1)
+        d = ''.join(d)
+        d = d.split()
+        end.append(d)
+    if str(call.data) == "Меню":
+        bot.delete_message(call.from_user.id, call.message.message_id)
+        menu(call)
+    elif str(call.data) == 'Принять' and str(call.from_user.id) == '5311448115':
+        bot.delete_message(call.from_user.id, call.message.message_id)
+        data = FileLoad("Данные\Пользователи\Пользователи", 'rb')
+        data[str(id_user)]["money"] += int(Highlighting_int(str(user_text_money)))
+        FileDump("Данные\Пользователи\Пользователи", 'wb', data)
+        bot.send_message(call.from_user.id, f"Заказ принят +{int(Highlighting_int(str(user_text_money)))} всего {data[str(id_user)]['money']}")
+        bot.send_message(id_user, 'Ваш запрос на пополнение принят', reply_markup=w)
+
+    elif str(call.data) == 'Не принять' and str(call.from_user.id) == '5311448115':
+        bot.delete_message(call.from_user.id, call.message.message_id)
+        bot.send_message(call.from_user.id, "Заказ не принят")
+        bot.send_message(id_user, 'Ваш запрос на пополнение отклонён,вопросы к Админу БОТа @Semen904', reply_markup=w)
+    elif str(call.data) == 'data' and str(call.from_user.id) == '5311448115':
+        data = FileLoad("Данные\Пользователи\Пользователи", 'rb')
+        bot.send_message(call.from_user.id, f"Пользователи\n {data}")
+        bot.send_message(call.from_user.id, f"Каналы\n {end}")
+    elif str(call.data) == "Добавить канал" and str(call.from_user.id) == '5311448115':
+        data = FileLoad("Данные\Пользователи\Пользователи", 'rb')
+        data[str(call.from_user.id)]["loke"] = "Добавить канал"
+        FileDump("Данные\Пользователи\Пользователи", 'wb', data)
+        bot.send_message(call.from_user.id, "Для добавления канала/группы нужно написать ссылку потом через пробел цену\n пример: https://t.me/Publishing_to_chats 100")
+    elif str(call.data) == 'Написать пост пользователям бота' and str(call.from_user.id) == '5311448115':
+        data = FileLoad("Данные\Пользователи\Пользователи", 'rb')
+        data[str(call.from_user.id)]["loke"] = 'Написать пост пользователям бота'
+        FileDump("Данные\Пользователи\Пользователи", 'wb', data)
+        bot.send_message(call.from_user.id, "Написать пост пользователям бота")
+    elif str(call.data) == 'Пополнить счёт за другова' and str(call.from_user.id) == '5311448115':
+        data = FileLoad("Данные\Пользователи\Пользователи", 'rb')
+        data[str(call.from_user.id)]["loke"] = "Пополнить счёт за другова"
+        FileDump("Данные\Пользователи\Пользователи", 'wb', data)
+        bot.send_message(call.from_user.id, "Для добавления денег нужно написать id человека потом через пробел сумму\n пример: 5311448115 100")
+    elif str(call.data) == 'Админ':
+        admin_menu(call)
+    elif str(call.data) == "У меня мобильная версия":
+        platform = 'Мобильная'
+        bot.send_message(call.from_user.id, 'Для окончания регистрации, нажмите на кнопку "поделиться своим контактом"', reply_markup=keyboard)
+    elif str(call.data) == "У меня компьютерная версия":
+        platform = 'Компьютерная'
+        bot.send_message(call.from_user.id, 'Для окончания регистрации, нажмите на кнопку "поделиться своим контактом"',
+                         reply_markup=keyboard)
+    elif str(call.data) == "Написать пост":
+        bot.delete_message(call.from_user.id, call.message.message_id)
+        q = Inlin_Markup()
+        for g in end:
+            print(g)
+            q.add(add_Inlin(str(' ₽'.join(g)), '', str(g[0])))
+        q.add(add_Inlin('Меню','','Меню'))
+        data = FileLoad("Данные\Пользователи\Пользователи", 'rb')
+        bot.send_message(call.from_user.id,
+                         f'Выберете канал для поста, у вас на счету ₽{data[str(call.from_user.id)]["money"]}',
+                         reply_markup=q)
+    elif str(call.data) in str(end):
+        bot.delete_message(call.from_user.id, call.message.message_id)
+        data = FileLoad("Данные\Пользователи\Пользователи", 'rb')
+        data[str(call.from_user.id)]["loke"] = "Написать пост"
+        FileDump("Данные\Пользователи\Пользователи", 'wb', data)
+        for e in end:
+            if e[0] == call.data:
+                ai = FileLoad("Данные\Пользователи\Пользователи", "rb")
+                if int(ai[str(call.from_user.id)]["money"]) >= int(e[1]):
+                    bot.send_message(call.from_user.id, "Напишите свой пост, используйте только текст")
+                    a = FileLoad("Данные\Пользователи\Пользователи", "rb")
+                    ff = a[str(call.from_user.id)]["money"]
+                    ff = int(ff)
+                    ff -= int(e[1])
+                    a[str(call.from_user.id)]["money"] = ff
+                    FileDump("Данные\Пользователи\Пользователи", 'wb', a)
+                    data = FileLoad("Данные\Пользователи\Пользователи", 'rb')
+                    data[str(call.from_user.id)]["info_chat"] = str(call.data)
+                    FileDump("Данные\Пользователи\Пользователи", 'wb', data)
+                else:
+                    bot.send_message(call.from_user.id, "Недостаточно средств", reply_markup=w)
+    elif str(call.data) == "Пополнить счёт":
+        bot.delete_message(call.from_user.id, call.message.message_id)
+        q = Inlin_Markup()
+        q.add(add_Inlin('QIWI','','QIWI'),add_Inlin('OZON','','OZON'))
+        q.add(add_Inlin('ТИНЬКОФФ', '', 'ТИНЬКОФФ'), add_Inlin('TON', '', 'TON'))
+        bot.send_message(call.from_user.id, "выберете способ пополнения", reply_markup=q)
+    elif str(call.data) == "QIWI":
+        bot.delete_message(call.from_user.id, call.message.message_id)
+        bot.send_message(call.from_user.id, 'QIWI кошелек по номеру +79117157906, после перевода напишите сумму в БОТ')
+        data = FileLoad("Данные\Пользователи\Пользователи", 'rb')
+        data[str(call.from_user.id)]["loke"] = "Пополнить счёт"
+        data[str(call.from_user.id)]["Bank"] = "QIWI"
+        FileDump("Данные\Пользователи\Пользователи", 'wb', data)
+        id_user = call.from_user.id
+    elif str(call.data) == "OZON":
+        bot.delete_message(call.from_user.id, call.message.message_id)
+        bot.send_message(call.from_user.id, 'Карта OZON банка по номеру +79117157906, после перевода напишите сумму в БОТ')
+        data = FileLoad("Данные\Пользователи\Пользователи", 'rb')
+        data[str(call.from_user.id)]["loke"] = "Пополнить счёт"
+        data[str(call.from_user.id)]["Bank"] = "OZON"
+        FileDump("Данные\Пользователи\Пользователи", 'wb', data)
+        id_user = call.from_user.id
+    elif str(call.data) == "ТИНЬКОФФ":
+        bot.delete_message(call.from_user.id, call.message.message_id)
+        bot.send_message(call.from_user.id, 'Карта Тинькофф банка по номеру +79284453602, после перевода напишите сумму в БОТ')
+        data = FileLoad("Данные\Пользователи\Пользователи", 'rb')
+        data[str(call.from_user.id)]["loke"] = "Пополнить счёт"
+        data[str(call.from_user.id)]["Bank"] = "ТИНЬКОФФ"
+        FileDump("Данные\Пользователи\Пользователи", 'wb', data)
+        id_user = call.from_user.id
+    elif str(call.data) == "TON":
+        bot.delete_message(call.from_user.id, call.message.message_id)
+        bot.send_message(call.from_user.id,'Переведите криптовалюту TON на кошелек @wallet по логину @Semen904, после перевода напишите сумму в БОТ')
+        data = FileLoad("Данные\Пользователи\Пользователи", 'rb')
+        data[str(call.from_user.id)]["loke"] = "Пополнить счёт"
+        data[str(call.from_user.id)]["Bank"] = "TON"
+        FileDump("Данные\Пользователи\Пользователи", 'wb', data)
+        id_user = call.from_user.id
+@bot.message_handler(func=lambda message: True)
+def messagett(message):
+    global info_chat
+    global id_user
+    global platform
+    global user_text_money
+    datarr = FileLoad("Данные\Пользователи\Пользователи", 'rb')
+
+    if not str(info_chat) == "" and str(datarr[str(message.from_user.id)]["loke"]) == "написать пост":
+        datarr[str(message.from_user.id)]["loke"] = ""
+        FileDump("Данные\Пользователи\Пользователи", 'wb', datarr)
+        try:
+            bot.send_message(str(datarr[str(message.from_user.id)]["info_chat"]), str(message.text))
+            info_chat = ''
+            bot.send_message(id_user, 'Опубликовано', reply_markup=w)
+        except:
+            f = open("Данные\Каналы\Каналы.txt", 'r')
+            data = list(f)
+            f.close()
+            end = []
+            for ds in data:
+                d = list(ds)
+                z = 0
+                while not z == 12:
+                    z += 1
+                    d.pop(0)
+                d[0] = "@"
+                d.pop(-1)
+                d = ''.join(d)
+                d = d.split()
+                end.append(d)
+                for e in end:
+                    if e[0] == str(info_chat):
+                        bot.send_message(message.from_user.id, "Произошла ошибка с выбранным каналом",reply_markup=w)
+                        a = FileLoad("Данные\Пользователи\Пользователи", "rb")
+                        ff = a[str(message.from_user.id)]["money"]
+                        ff = int(ff)
+                        ff += int(e[1])
+                        a[str(message.from_user.id)]["money"] = ff
+                        FileDump("Данные\Пользователи\Пользователи", 'wb', a)
+    elif datarr[str(message.from_user.id)]["loke"] == "Пополнить счёт":
+        datarr[str(message.from_user.id)]["loke"] = ""
+        FileDump("Данные\Пользователи\Пользователи", 'wb', datarr)
+        a = FileLoad("Данные\Пользователи\Пользователи", "rb")
+        q = Inlin_Markup()
+        q.add(add_Inlin('Принять', '', 'Принять'),
+              add_Inlin('Не принять', '', 'Не принять'))
+        photo = open('Данные\Фото\Заказ.jpg', 'rb')
+        bot.send_photo('5311448115', photo,
+                       caption=f'Заказ\n {a[str(id_user)]}\n\nСумма {message.text}\n\nЦыфры {Highlighting_int(message.text)}', reply_markup=q)
+        photo.close()
+        user_text_money = message.text
+        #bot.send_message('5311448115',"")
+    elif str(datarr[str(message.from_user.id)]["loke"]) == "Добавить канал" and str(message.from_user.id) == '5311448115':
+        datarr[str(message.from_user.id)]["loke"] = ""
+        FileDump("Данные\Пользователи\Пользователи", 'wb', datarr)
+        add_kanal(str(message.text))
+    elif str(datarr[str(message.from_user.id)]["loke"]) == 'Написать пост пользователям бота' and str(message.from_user.id) == '5311448115':
+        datarr[str(message.from_user.id)]["loke"] = ""
+        FileDump("Данные\Пользователи\Пользователи", 'wb', datarr)
+        data = FileLoad('Данные\Пользователи\Пользователи id', 'rb')
+        for datas in data:
+            bot.send_message(datas, str(message.text))
+    elif str(datarr[str(message.from_user.id)]["loke"]) == 'Пополнить счёт за другова' and str(message.from_user.id) == '5311448115':
+        s = message.text.split()
+        o = s[0]
+        d = s[1]
+        a = FileLoad("Данные\Пользователи\Пользователи", "rb")
+        a[str(o)]["money"] += int(d)
+        FileDump("Данные\Пользователи\Пользователи", 'wb', a)
+@bot.message_handler(content_types=['contact'])
+def photo(message):
+    data = FileLoad("Данные\Пользователи\Пользователи", 'rb')
+    if not str(message.from_user.id) in data:
+        data[str(message.from_user.id)] = {'phone': message.contact.phone_number, 'name': message.contact.first_name,
+                                           'last_name': message.contact.last_name, "user_id": message.contact.user_id,
+                                           'vcard': message.contact.vcard, "user_name": message.from_user.username,
+                                           'language_code': message.from_user.language_code, "money": 0, "platform": platform,
+                                           'Bank': '', 'loke': '', "info_chat": ''}
+        FileDump("Данные\Пользователи\Пользователи", 'wb', data)
+        with open("Данные\Пользователи\Пользователи id.txt", "a", encoding='utf-8') as f:
+            data = "\n" + str(message.contact.user_id)
+            f.write(data)
+        data = FileLoad('Данные\Пользователи\Пользователи id', 'rb')
+        data.append(str(message.contact.user_id))
+        FileDump('Данные\Пользователи\Пользователи id', 'wb', data)
+        print(FileLoad('Данные\Пользователи\Пользователи id', 'rb'))
+        keyboarde = types.ReplyKeyboardRemove()
+        bot.send_message(message.chat.id, f"Вы успешно зарегистрировались, у вас на счету 0₽", reply_markup=keyboarde)
+        menu(message)
+
+bot.polling()
